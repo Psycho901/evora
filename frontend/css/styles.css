@@ -417,3 +417,62 @@ input[type="password"]::-ms-clear {
 .pw-toggle:hover {
     color: var(--primary);
 }
+
+/* ---------- Mobile menu ---------- */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    flex-direction: column;
+    gap: 5px;
+}
+.nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 3px;
+    background: var(--text-primary, #222);
+    border-radius: 2px;
+}
+.nav-overlay { display: none; }
+
+@media (max-width: 768px) {
+    .nav-toggle { display: flex; }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 260px;
+        max-width: 80vw;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        margin: 0;
+        padding: 4rem 1rem 1rem;
+        list-style: none;
+        background: var(--card-bg, var(--bg, #fff));
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 1001;
+    }
+    .nav-links.open { transform: translateX(0); }
+    .nav-links li { width: 100%; }
+    .nav-links a {
+        display: block;
+        padding: 0.85rem 0.5rem;
+        border-bottom: 1px solid var(--border, #ddd);
+    }
+
+    .nav-overlay.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+    }
+}
