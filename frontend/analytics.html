@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - EVORA</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/dashboard" class="nav-brand">EVORA</a>
+        <ul class="nav-links">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/goals">Goals</a></li>
+            <li><a href="/study_planner">Study Planner</a></li>
+            <li><a href="/schedule">Schedule</a></li>
+            <li><a href="/analytics">Analytics</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 0.5rem;">Your Analytics</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Track your mood trends and progress</p>
+
+        <div class="grid grid-2">
+            <div class="card">
+                <h2 class="card-title" style="margin-bottom: 1rem;">Mood Overview</h2>
+                <p style="color: var(--text-secondary);" id="moodStatus">Check in daily to track your mood!</p>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: space-around; flex-wrap: wrap;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">😔</div>
+                        <div style="color: var(--text-secondary);">Low</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">😐</div>
+                        <div style="color: var(--text-secondary);">Okay</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">😊</div>
+                        <div style="color: var(--text-secondary);">Good</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">🔥</div>
+                        <div style="color: var(--text-secondary);">Focused</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; text-align: center;">
+                    <a href="/mood_checkin" class="btn btn-primary">Do Mood Check-in</a>
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="card-title" style="margin-bottom: 1rem;">Study Stats</h2>
+                <p style="color: var(--text-secondary);">Your progress at a glance</p>
+                <div style="margin-top: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border);">
+                        <span>Goals Set</span>
+                        <span style="color: var(--primary); font-weight: 600;" id="goalsCount">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border);">
+                        <span>Journal Entries</span>
+                        <span style="color: var(--primary); font-weight: 600;" id="journalCount">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0;">
+                        <span>Study Sessions</span>
+                        <span style="color: var(--primary); font-weight: 600;" id="sessionsCount">-</span>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <a href="/goals" class="btn btn-secondary" style="width: 100%;">View Goals</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/analytics.js"></script>
+</body>
+</html>

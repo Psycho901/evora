@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule - EVORA</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/dashboard" class="nav-brand">EVORA</a>
+        <ul class="nav-links">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/goals">Goals</a></li>
+            <li><a href="/study_planner">Study Planner</a></li>
+            <li><a href="/schedule">Schedule</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 0.5rem;">My Schedule Planner</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Organize your day and link with goals</p>
+
+        <div class="card">
+            <h2 class="card-title" style="margin-bottom: 1rem;">Upload Existing Schedule</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" id="scheduleFile" name="file" class="form-input"
+                        accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,.tif,.tiff,.txt,image/*">
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">Supports PDF, PNG,
+                        JPG, JPEG, WEBP, GIF, BMP, TIF, TIFF, TXT</p>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload & Add to Plan</button>
+            </form>
+            <div class="card" id="reviewCard" style="display: none;">
+                <h2 class="card-title" style="margin-bottom: 0.5rem;">Review Your Classes</h2>
+                <p id="reviewNote" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Check
+                    each row, fix anything wrong, then save.</p>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
+                        <thead>
+                            <tr style="background: var(--bg);">
+                                <th style="padding: 0.5rem; border: 1px solid var(--border); text-align: left;">Day</th>
+                                <th style="padding: 0.5rem; border: 1px solid var(--border); text-align: left;">Start
+                                </th>
+                                <th style="padding: 0.5rem; border: 1px solid var(--border); text-align: left;">End</th>
+                                <th style="padding: 0.5rem; border: 1px solid var(--border); text-align: left;">Subject
+                                </th>
+                                <th style="padding: 0.5rem; border: 1px solid var(--border);"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviewBody"></tbody>
+                    </table>
+                </div>
+                <div style="display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;">
+                    <button id="addRowBtn" class="btn btn-secondary">+ Add Row</button>
+                    <button id="saveSlotsBtn" class="btn btn-primary">Save Classes</button>
+                    <button id="cancelReviewBtn" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title" style="margin-bottom: 1.5rem;">Create Manual Schedule</h2>
+            <div class="grid grid-2" style="margin-bottom: 1.5rem;">
+                <div class="form-group">
+                    <label class="form-label">Wake Up Time</label>
+                    <input type="time" id="wakeTime" class="form-input" value="06:00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sleep Time</label>
+                    <input type="time" id="sleepTime" class="form-input" value="22:00">
+                </div>
+            </div>
+            <button id="generateSchedule" class="btn btn-primary" style="margin-bottom: 1.5rem;">Generate Hourly
+                Schedule</button>
+
+            <div id="scheduleGrid" style="display: none;">
+                <h3 style="margin-bottom: 1rem;">Weekly Schedule (Sun - Mon view)</h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
+                        <thead>
+                            <tr style="background: var(--bg);">
+                                <th style="padding: 0.75rem; border: 1px solid var(--border); text-align: left;">Time
+                                </th>
+                                <th style="padding: 0.75rem; border: 1px solid var(--border);">Sunday</th>
+                                <th style="padding: 0.75rem; border: 1px solid var(--border);">Monday</th>
+                                <th style="padding: 0.75rem; border: 1px solid var(--border);">Tuesday</th>
+                                <th style="padding: 0.75rem; border: 1px solid var(--border);">Wednesday</th>
+                                <th style="padding: 0.75rem; border: 1px solid var(--border);">Thursday</th>
+                                <th style="padding: 0.75rem; border: 1px solid var(--border);">Friday</th>
+                                <th style="padding: 0.75rem; border: 1px solid var(--border);">Saturday</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleBody"></tbody>
+                    </table>
+                </div>
+                <button id="saveManual" class="btn btn-primary" style="margin-top: 1.5rem;">Save Schedule & Organize
+                    with Goals</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title" style="margin-bottom: 1rem;">My Classes</h2>
+            <div id="slotsView">
+                <p style="color: var(--text-secondary);">No classes saved yet.</p>
+            </div>
+        </div>
+
+        <h2 style="margin: 2rem 0 1rem;">Saved Schedules</h2>
+        <div id="schedulesList"></div>
+    </div>
+
+    <script src="js/schedule_new.js"></script>
+</body>
+
+</html>

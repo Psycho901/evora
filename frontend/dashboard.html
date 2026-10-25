@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EVORA</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/dashboard" class="nav-brand">EVORA</a>
+        <ul class="nav-links">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/mood_checkin">Mood Check-in</a></li>
+            <li><a href="/goals">Goals</a></li>
+            <li><a href="/study_planner">Study Planner</a></li>
+            <li><a href="/schedule">Schedule</a></li>
+            <li><a href="/chat">Just Talk</a></li>
+            <li><a href="/journal">Journal</a></li>
+            <li><a href="/analytics">Analytics</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 0.5rem;">Welcome to EVORA</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Evolve at your own pace</p>
+
+        <div class="quote-card" id="quote">
+            Loading motivational quote...
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem; margin-bottom: 1rem;">
+            <div
+                style="display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.9rem; background: rgba(245, 158, 11, 0.15); border-radius: 20px; border: 1px solid var(--warning);">
+                <span style="font-size: 1.2rem;">🔥</span>
+                <span style="font-weight: 600; color: var(--warning);" id="streakCount">0</span>
+                <span style="color: var(--text-secondary); font-size: 0.9rem;">day streak</span>
+            </div>
+        </div>
+
+        <div class="card" id="upNextCard" style="margin-top: 1.5rem;">
+            <div class="card-header">
+                <h2 class="card-title">📅 Up Next</h2>
+            </div>
+            <div id="upNextBody">
+                <p style="color: var(--text-secondary);">Loading your schedule...</p>
+            </div>
+        </div>
+
+        <div class="grid grid-3" style="margin-top: 1.5rem;">
+            <a href="/chat" class="card" style="text-decoration: none; text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">💬</div>
+                <h3>Just Talk</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Heartful conversation</p>
+            </a>
+            <a href="/study_planner" class="card" style="text-decoration: none; text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📚</div>
+                <h3>Study Now</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Mood-based learning</p>
+            </a>
+            <a href="/goals" class="card" style="text-decoration: none; text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+                <h3>Set Goals</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Track your journey</p>
+            </a>
+        </div>
+
+        <div class="card" style="margin-top: 2rem;">
+            <div class="card-header">
+                <h2 class="card-title">📊 Smart Study Plan Generator</h2>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Based on your goals progress and deadlines,
+                calculate study hours needed to stay on track</p>
+            <button id="generateSmartPlan" class="btn btn-primary">Generate Weekly Study Plan</button>
+            <div id="smartPlanResult" style="margin-top: 1.5rem; display: none;"></div>
+        </div>
+
+        <div class="grid grid-3" style="margin-top: 2rem;">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Quick Actions</h2>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="/schedule" class="btn btn-secondary">📅 Manage Schedule</a>
+                    <a href="/goals" class="btn btn-secondary">🎯 Manage Goals</a>
+                    <a href="/analytics" class="btn btn-secondary">📊 View Analytics</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Get Started</h2>
+                </div>
+                <p style="color: var(--text-secondary);">Check your mood and start studying based on how you feel</p>
+                <a href="/study_planner" class="btn btn-primary" style="margin-top: 1rem;">Start Planning</a>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Get Organized</h2>
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 0.75rem;">Link your goals, schedule & study plan
+                    together</p>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <a href="/goals" style="color: var(--primary); text-decoration: none;">→ Set Goals → Break into
+                        Tasks</a>
+                    <a href="/schedule" style="color: var(--primary); text-decoration: none;">→ Upload Schedule → Plan
+                        Your Day</a>
+                    <a href="/study_planner" style="color: var(--primary); text-decoration: none;">→ Smart Planner →
+                        Study Productively</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        fetch('/api/planner/quote')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('quote').textContent = '"' + data.quote + '"';
+            })
+            .catch(() => {
+                document.getElementById('quote').textContent = '"Progress is not always visible, but it\'s happening."';
+            });
+
+        // Calculate streak
+        const streak = localStorage.getItem('evoraStreak') || 0;
+        const lastCheck = localStorage.getItem('evoraLastCheck');
+        const today = new Date().toDateString();
+        if (lastCheck === today) {
+            document.getElementById('streakCount').textContent = streak;
+        } else {
+            if (lastCheck) {
+                const last = new Date(lastCheck);
+                const diff = Math.floor((new Date(today) - last) / (1000 * 60 * 60 * 24));
+                if (diff === 1) {
+                    const newStreak = parseInt(streak) + 1;
+                    localStorage.setItem('evoraStreak', newStreak);
+                    localStorage.setItem('evoraLastCheck', today);
+                    document.getElementById('streakCount').textContent = newStreak;
+                } else {
+                    localStorage.setItem('evoraStreak', 1);
+                    localStorage.setItem('evoraLastCheck', today);
+                    document.getElementById('streakCount').textContent = 1;
+                }
+            } else {
+                localStorage.setItem('evoraStreak', 1);
+                localStorage.setItem('evoraLastCheck', today);
+                document.getElementById('streakCount').textContent = 1;
+            }
+        }
+
+        document.getElementById('generateSmartPlan').addEventListener('click', async () => {
+            const res = await fetch('/api/goals/');
+            const goals = await res.json();
+            const result = document.getElementById('smartPlanResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p style="color: var(--text-secondary);">Calculating based on deadlines and pending tasks...</p>';
+
+            setTimeout(() => {
+                if (goals.length === 0) {
+                    result.innerHTML = '<p style="color: var(--warning);">Add some goals first to generate a smart study plan!</p>';
+                    return;
+                }
+                let totalHours = 0;
+                let planHtml = '<h3 style="margin-bottom: 1rem; color: var(--primary);">This Week\'s Recommended Study Time</h3><div style="display: flex; flex-direction: column; gap: 0.75rem;">';
+                goals.forEach((goal, idx) => {
+                    const daysLeft = goal.deadline ? Math.max(1, Math.ceil((new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24))) : 21;
+                    const remainingWork = 100;
+                    const hoursNeeded = Math.min(20, Math.max(3, Math.ceil(remainingWork * 0.15 / daysLeft * 10)));
+                    totalHours += hoursNeeded;
+                    planHtml += `<div style="padding: 0.75rem; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--secondary);">
+                        <strong>${idx + 1}. ${goal.title}</strong> ${goal.exam && goal.exam !== 'To-Do' && goal.exam !== 'Assignment' ? '(' + goal.exam + ')' : ''}
+                        <div style="color: var(--text-secondary); margin-top: 0.25rem;">Days left: ${daysLeft} | Pending tasks need: <span style="color: var(--primary); font-weight: 600;">${hoursNeeded} hours/week</span></div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Allocate ~${Math.max(1, Math.ceil(hoursNeeded / 7))} hour(s)/day to complete on time</div>
+                    </div>`;
+                });
+                planHtml += `</div><div style="margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px;">
+                    <strong style="color: var(--success);">Total Study Time Needed This Week:</strong> ${totalHours} hours (~${Math.ceil(totalHours / 7)} hours/day)
+                    <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">Go to Schedule page and allocate these hours to your free slots</div>
+                    <div style="margin-top: 0.75rem;"><a href="/schedule" class="btn btn-primary">Go to Schedule & Allocate Time →</a></div>
+                </div>`;
+                result.innerHTML = planHtml;
+            }, 600);
+        });
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        async function loadUpNext() {
+            const body = document.getElementById('upNextBody');
+            try {
+                const res = await fetch('/api/schedule/up-next');
+                if (res.status === 401) { window.location.href = '/login'; return; }
+                const d = await res.json();
+
+                if (!d.has_schedule) {
+                    body.innerHTML = `
+                        <p style="color: var(--text-secondary); margin-bottom: 0.75rem;">Add your timetable to see your classes and free time here.</p>
+                        <a href="/schedule" class="btn btn-primary">Add Schedule</a>`;
+                    return;
+                }
+
+                const line = 'padding: 0.5rem 0; color: var(--text-primary);';
+                let html = '';
+
+                if (d.current) {
+                    html += `<div style="${line}">▶ <strong>Now:</strong> ${escapeHtml(d.current.subject)} <span style="color: var(--text-secondary);">until ${escapeHtml(d.current.end_time)}</span></div>`;
+                }
+                if (d.next) {
+                    html += `<div style="${line}">⏭ <strong>Next:</strong> ${escapeHtml(d.next.subject)} <span style="color: var(--text-secondary);">at ${escapeHtml(d.next.start_time)}</span></div>`;
+                }
+                if (d.free) {
+                    const hrs = Math.floor(d.free.minutes / 60);
+                    const mins = d.free.minutes % 60;
+                    const length = hrs ? `${hrs}h ${mins}m` : `${mins}m`;
+                    html += `<div style="${line}">🕒 <strong>Free:</strong> ${escapeHtml(d.free.start)} – ${escapeHtml(d.free.end)} <span style="color: var(--text-secondary);">(${length})</span></div>`;
+                }
+                if (!d.current && !d.next) {
+                    html += `<div style="${line}">${d.classes_today === 0 ? '🎉 No classes today.' : '✅ No more classes today.'}</div>`;
+                }
+
+                html += `<a href="/schedule" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">View full schedule →</a>`;
+                body.innerHTML = html;
+            } catch (err) {
+                body.innerHTML = '<p style="color: var(--text-secondary);">Could not load your schedule.</p>';
+            }
+        }
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        async function loadUpNext() {
+            const body = document.getElementById('upNextBody');
+            try {
+                const res = await fetch('/api/schedule/up-next');
+                if (res.status === 401) { window.location.href = '/login'; return; }
+                const d = await res.json();
+
+                if (!d.has_schedule) {
+                    body.innerHTML = `
+                        <p style="color: var(--text-secondary); margin-bottom: 0.75rem;">Add your timetable to see your classes and free time here.</p>
+                        <a href="/schedule" class="btn btn-primary">Add Schedule</a>`;
+                    return;
+                }
+
+                const line = 'padding: 0.5rem 0; color: var(--text-primary);';
+                let html = '';
+
+                if (d.current) {
+                    html += `<div style="${line}">▶ <strong>Now:</strong> ${escapeHtml(d.current.subject)} <span style="color: var(--text-secondary);">until ${escapeHtml(d.current.end_time)}</span></div>`;
+                }
+                if (d.next) {
+                    html += `<div style="${line}">⏭ <strong>Next:</strong> ${escapeHtml(d.next.subject)} <span style="color: var(--text-secondary);">at ${escapeHtml(d.next.start_time)}</span></div>`;
+                }
+                if (d.free) {
+                    const hrs = Math.floor(d.free.minutes / 60);
+                    const mins = d.free.minutes % 60;
+                    const length = hrs ? `${hrs}h ${mins}m` : `${mins}m`;
+                    html += `<div style="${line}">🕒 <strong>Free:</strong> ${escapeHtml(d.free.start)} – ${escapeHtml(d.free.end)} <span style="color: var(--text-secondary);">(${length})</span></div>`;
+                }
+                if (!d.current && !d.next) {
+                    html += `<div style="${line}">${d.classes_today === 0 ? '🎉 No classes today.' : '✅ No more classes today.'}</div>`;
+                }
+
+                html += `<a href="/schedule" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">View full schedule →</a>`;
+                body.innerHTML = html;
+            } catch (err) {
+                body.innerHTML = '<p style="color: var(--text-secondary);">Could not load your schedule.</p>';
+            }
+        }
+
+        loadUpNext();
+
+                function todoDays(dateStr) {
+            const p = dateStr.split('-').map(Number);
+            const due = new Date(p[0], p[1] - 1, p[2]);
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            return Math.round((due - today) / 86400000);
+        }
+
+        async function loadTodoAlerts() {
+            try {
+                const res = await fetch('/api/goals/todos');
+                if (!res.ok) return;
+                const todos = await res.json();
+                const pending = todos.filter(t => !t.done && t.due_date);
+                const groups = [
+                    ['⏰ Due tomorrow', pending.filter(t => todoDays(t.due_date) === 1), '#d97706'],
+                    ['🔔 Due today', pending.filter(t => todoDays(t.due_date) === 0), 'var(--danger)'],
+                    ['⚠️ Overdue', pending.filter(t => todoDays(t.due_date) < 0), 'var(--danger)']
+                ];
+                let html = '';
+                groups.forEach(([label, items, color]) => {
+                    if (items.length) {
+                        html += `<div style="border-left:4px solid ${color}; padding:0.4rem 0.75rem; margin-top:0.5rem;">
+                            <strong>${label}:</strong> ${items.map(t => escapeHtml(t.text)).join(', ')}</div>`;
+                    }
+                });
+                if (!html) return;
+                let box = document.getElementById('upNextTodos');
+                if (!box) {
+                    box = document.createElement('div');
+                    box.id = 'upNextTodos';
+                    document.getElementById('upNextBody').insertAdjacentElement('afterend', box);
+                }
+                box.innerHTML = html;
+            } catch (err) { /* alerts are optional, ignore errors */ }
+        }
+
+        loadTodoAlerts();
+        
+    </script>
+</body>
+
+</html>

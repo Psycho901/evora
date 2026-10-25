@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Planner - EVORA</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/dashboard" class="nav-brand">EVORA</a>
+        <ul class="nav-links">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/goals">Goals</a></li>
+            <li><a href="/study_planner">Study Planner</a></li>
+            <li><a href="/schedule">Schedule</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 0.5rem;">Smart Study Planner</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Personalized study plan based on your mood and availability | Linked to your Goals</p>
+
+        <div id="step1" class="card">
+            <h2 class="card-title" style="margin-bottom: 1.5rem;">Step 1: How are you feeling?</h2>
+            <div class="mood-grid">
+                <div class="mood-option" data-mood="low">
+                    <span class="mood-emoji">😔</span>
+                    <div class="mood-label">Low Energy</div>
+                </div>
+                <div class="mood-option" data-mood="okay">
+                    <span class="mood-emoji">😐</span>
+                    <div class="mood-label">Okay</div>
+                </div>
+                <div class="mood-option" data-mood="good">
+                    <span class="mood-emoji">😊</span>
+                    <div class="mood-label">Good</div>
+                </div>
+                <div class="mood-option" data-mood="focused">
+                    <span class="mood-emoji">🔥</span>
+                    <div class="mood-label">Focused</div>
+                </div>
+            </div>
+            <button id="next1" class="btn btn-primary" style="margin-top: 1rem;" disabled>Next</button>
+        </div>
+
+        <div id="step2" class="card" style="display: none;">
+            <h2 class="card-title" style="margin-bottom: 1.5rem;">Step 2: How much time can you study?</h2>
+            <div class="grid grid-2">
+                <div class="mood-option" data-duration="short">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏱️</div>
+                    <div class="mood-label">Short Session (30-45 min)</div>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">Light revision, easy topics</p>
+                </div>
+                <div class="mood-option" data-duration="long">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                    <div class="mood-label">Long Session (1-3 hours)</div>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">Deep learning, new topics</p>
+                </div>
+            </div>
+            <button id="next2" class="btn btn-primary" style="margin-top: 1rem;" disabled>Get My Plan</button>
+        </div>
+
+        <div id="planResult" style="display: none;">
+            <div class="card">
+                <h2 class="card-title" style="margin-bottom: 1rem;">Your Personalized Study Plan</h2>
+                <p id="planSummary" style="color: var(--text-secondary); margin-bottom: 1.5rem;"></p>
+            </div>
+
+            <h2 style="margin: 2rem 0 1rem;">Topics to Study</h2>
+            <div id="topicsList"></div>
+
+            <h2 style="margin: 2rem 0 1rem;">Recommended Videos & Resources</h2>
+            <div id="resourcesList" class="grid grid-3"></div>
+        </div>
+    </div>
+
+    <script src="js/planner_new.js"></script>
+</body>
+</html>

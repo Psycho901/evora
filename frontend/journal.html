@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal - EVORA</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/dashboard" class="nav-brand">EVORA</a>
+        <ul class="nav-links">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/journal">Journal</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 0.5rem;">Private Journal</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">A safe space to reflect and express yourself</p>
+
+        <div class="card">
+            <h2 class="card-title" style="margin-bottom: 1rem;">New Entry</h2>
+            <textarea id="journalContent" class="journal-textarea" placeholder="Write your thoughts..."></textarea>
+            <button id="saveJournal" class="btn btn-primary" style="margin-top: 1rem;">Save Entry</button>
+        </div>
+
+        <h2 style="margin: 2rem 0 1rem;">Past Entries</h2>
+        <div id="journalEntries"></div>
+    </div>
+
+    <script src="js/journal.js"></script>
+</body>
+</html>

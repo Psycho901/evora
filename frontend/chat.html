@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talk to EVORA</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .chat-page {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .chat-topbar {
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .chat-topbar-logo {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        .chat-topbar nav {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .chat-topbar nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .chat-topbar nav a:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .mode-bar {
+            display: flex;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .mode-btn {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .mode-btn.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .mode-desc {
+            padding: 8px 24px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chat-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            animation: msgIn 0.3s ease;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .msg-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .message.ai .msg-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        .message.user .msg-avatar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .msg-bubble {
+            max-width: 68%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .msg-text {
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .message.ai .msg-text {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-top-left-radius: 4px;
+        }
+
+        .message.user .msg-text {
+            background: rgba(99, 102, 241, 0.18);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-top-right-radius: 4px;
+            text-align: right;
+        }
+
+        .msg-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            padding: 0 4px;
+        }
+
+        .message.user .msg-time {
+            text-align: right;
+        }
+
+        .emotion-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .etag {
+            padding: 2px 9px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .typing-bubble {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            border-top-left-radius: 4px;
+            padding: 14px 18px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            animation: blink 1.2s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+
+            0%,
+            80%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            40% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Quick replies */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 4px 0;
+            margin-top: 4px;
+        }
+
+        .qr-btn {
+            padding: 6px 14px;
+            border-radius: 16px;
+            border: 1px solid var(--primary);
+            background: rgba(99, 102, 241, 0.08);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .qr-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        /* Side panel */
+        .chat-side {
+            width: 280px;
+            border-left: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--bg-card);
+        }
+
+        .side-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .emotion-bar-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 36px;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .emotion-bar-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .emotion-bar-bg {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .emotion-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .emotion-bar-pct {
+            font-size: 11px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .insight-card {
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid;
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .insight-card.positive {
+            border-color: #10b981;
+        }
+
+        .insight-card.growth {
+            border-color: #f59e0b;
+        }
+
+        .insight-card.neutral {
+            border-color: var(--primary);
+        }
+
+        /* Input area */
+        .chat-input-wrap {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .suggestions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+
+        .suggestions::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sug-btn {
+            padding: 5px 12px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .sug-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .chat-textarea {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            max-height: 120px;
+            line-height: 1.5;
+            transition: border-color 0.2s;
+        }
+
+        .chat-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .chat-textarea::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .send-btn {
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+        }
+
+        .send-btn:hover {
+            transform: scale(1.06);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .chat-side {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-page">
+
+        <!-- Top bar -->
+        <div class="chat-topbar">
+            <span class="chat-topbar-logo">🌱 EVORA</span>
+            <nav>
+                <a href="/dashboard">🏠 Dashboard</a>
+                <a href="/goals">🎯 Goals</a>
+                <a href="/study_planner">📚 Study</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </div>
+
+        <!-- Mode tabs -->
+        <div class="mode-bar">
+            <button class="mode-btn active" id="btnTalk" onclick="switchMode('talk',    this)">💙 Just Talk</button>
+            <button class="mode-btn" id="btnAnalyze" onclick="switchMode('analyze', this)">🧠 Analyze Feelings</button>
+            <button class="mode-btn" id="btnStudy" onclick="switchMode('study',   this)">📚 Study with Me</button>
+            <button class="mode-btn" id="btnPlan" onclick="switchMode('plan',    this)">📅 Plan My Day</button>
+        </div>
+        <div class="mode-desc" id="modeDesc">
+            💙 <strong>Just Talk</strong> — A safe space to share anything. I'm here, no judgment.
+        </div>
+
+        <div class="chat-body">
+            <!-- Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome message added by JS -->
+            </div>
+
+            <!-- Side panel -->
+            <div class="chat-side">
+                <div>
+                    <div class="side-title">🎨 Emotion Radar</div>
+                    <div id="emotionRadar">
+                        <p style="font-size:12px;color:var(--text-secondary);">Send a message to see your emotion
+                            analysis.</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="side-title">💡 Insights</div>
+                    <div id="insightPanel">
+                        <p style="font-size:12px;color:var(--text-secondary);">Insights will appear as you chat more.
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <div class="side-title">🔍 Key Expressions</div>
+                    <div id="highlightsPanel" style="font-size:13px;line-height:1.8;color:var(--text-secondary);">
+                        Emotionally significant phrases will be highlighted here.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="chat-input-wrap">
+            <div class="suggestions" id="suggestions"></div>
+            <div class="input-row">
+                <textarea class="chat-textarea" id="chatInput" rows="1" placeholder="Talk to me…"
+                    oninput="autoResize(this)"
+                    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}">
+      </textarea>
+                <button class="send-btn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/chat.js"></script>
+</body>
+
+</html>

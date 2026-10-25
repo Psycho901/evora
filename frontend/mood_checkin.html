@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Check-in - EVORA</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/dashboard" class="nav-brand">EVORA</a>
+        <ul class="nav-links">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/mood_checkin">Mood Check-in</a></li>
+            <li><a href="/goals">Goals</a></li>
+            <li><a href="/study_planner">Study Planner</a></li>
+            <li><a href="/chat">Just Talk</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container" style="max-width: 800px;">
+        <h1 style="text-align: center; margin-bottom: 0.5rem;">Daily Mood Check-in</h1>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">How are you feeling right now?</p>
+
+        <div class="card">
+            <div class="mood-grid">
+                <div class="mood-option" data-score="1" data-label="Low">
+                    <span class="mood-emoji">😔</span>
+                    <div class="mood-label">Low</div>
+                </div>
+                <div class="mood-option" data-score="2" data-label="Okay">
+                    <span class="mood-emoji">😐</span>
+                    <div class="mood-label">Okay</div>
+                </div>
+                <div class="mood-option" data-score="3" data-label="Good">
+                    <span class="mood-emoji">😊</span>
+                    <div class="mood-label">Good</div>
+                </div>
+                <div class="mood-option" data-score="4" data-label="Focused">
+                    <span class="mood-emoji">🔥</span>
+                    <div class="mood-label">Focused</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Notes (optional)</label>
+                <textarea id="notes" class="journal-textarea" style="min-height: 100px;" placeholder="Anything on your mind?"></textarea>
+            </div>
+
+            <button id="submitBtn" class="btn btn-primary" style="width: 100%;">Save Check-in</button>
+        </div>
+
+        <div id="result" style="display: none; text-align: center; margin-top: 2rem;">
+            <div class="card">
+                <h2 style="margin-bottom: 1rem;">Thanks for checking in!</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Your mood has been logged. Based on how you're feeling, we've got personalized recommendations for you.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/study_planner" class="btn btn-primary">Go to Study Planner</a>
+                    <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/mood.js"></script>
+</body>
+</html>

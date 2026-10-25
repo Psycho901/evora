@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goals - EVORA</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/dashboard" class="nav-brand">EVORA</a>
+        <ul class="nav-links">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/goals">Goals</a></li>
+            <li><a href="/study_planner">Study Planner</a></li>
+            <li><a href="/schedule">Schedule</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 0.5rem;">Your Goals</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Set goals and break them into actionable subtopics
+        </p>
+
+        <div class="card">
+            <h2 class="card-title" style="margin-bottom: 1.5rem;">Add New Goal</h2>
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label class="form-label">Goal Title</label>
+                    <input type="text" id="goalTitle" class="form-input"
+                        placeholder="e.g., Crack GATE 2026 or Submit Assignment">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Type</label>
+                    <select id="goalType" class="form-input">
+                        <option value="short">Short Term</option>
+                        <option value="long">Long Term</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Exam / Category (if applicable)</label>
+                    <select id="goalExam" class="form-input">
+                        <option value="">Custom</option>
+                        <option value="GATE">GATE</option>
+                        <option value="JEE">JEE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Due Date / Deadline</label>
+                    <input type="date" id="goalDeadline" class="form-input">
+                </div>
+            </div>
+            <button id="addGoalBtn" class="btn btn-primary">Add Goal</button>
+        </div>
+
+        <div class="card" id="todoCard">
+            <h2 class="card-title" style="margin-bottom: 1rem;">To-Do List</h2>
+            <div id="todoReminders"></div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                <input type="text" id="todoText" class="form-input" placeholder="Add a to-do..." maxlength="200"
+                    style="flex: 2; min-width: 180px;">
+                <input type="date" id="todoDue" class="form-input" style="flex: 1; min-width: 140px;">
+                <button id="todoAdd" class="btn btn-primary">Add</button>
+            </div>
+            <div id="todoList"></div>
+        </div>
+
+        <h2 style="margin: 2rem 0 1rem;">My Goals</h2>
+        <div id="goalsList"></div>
+    </div>
+
+    <script src="js/syllabus.js"></script>
+    <script src="js/goals_new.js"></script>
+    <script src="js/todos.js"></script>
+</body>
+
+</html>
